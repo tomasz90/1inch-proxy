@@ -50,21 +50,29 @@ contract OwnableByWorker is Ownable {
 
 contract OneInchProxy is OwnableByWorker {
 
-    OneInch private immutable oneInch = OneInch(0x11111112542D85B3EF69AE05771c2dCCff4fAa26);
+    OneInch public oneInch;
 
-    IERC20 private immutable DAI = IERC20(0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063);
-    IERC20 private immutable USDC = IERC20(0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174);
-    IERC20 private immutable USDT = IERC20(0xc2132D05D31c914a87C6611C10748AEb04B58e8F);
-    IERC20 private immutable UST = IERC20(0x692597b009d13C4049a947CAB2239b7d6517875F);
+    IERC20 public dai;
+    IERC20 public usdc;
+    IERC20 public usdt;
+    IERC20 public ust;
+
+    constructor(address _router, address _dai, address _usdc, address _usdt, address _ust) {
+        oneInch = OneInch(_router);
+        dai = IERC20(_dai);
+        usdc = IERC20(_usdc);
+        usdt = IERC20(_usdt);
+        ust = IERC20(_ust);
+    }
 
     function swap(address caller, SwapDescription memory desc, bytes memory data) external onlyWorker {
 
         require(desc.dstReceiver == owner(), "Receiver is not the owner.");
 
-        require(desc.dstToken == DAI  ||
-                desc.dstToken == USDC ||
-                desc.dstToken == USDT ||
-                desc.dstToken == UST, "Token not supported." );
+        require(desc.dstToken == dai  ||
+                desc.dstToken == usdc ||
+                desc.dstToken == usdt ||
+                desc.dstToken == ust, "Token not supported." );
 
         uint256 dstBalance = desc.dstToken.balanceOf(owner());
 
@@ -77,7 +85,7 @@ contract OneInchProxy is OwnableByWorker {
     }
 }
 
-contract OneInch {
+interface OneInch {
     
     function swap(
         address caller,
@@ -86,5 +94,5 @@ contract OneInch {
     )
         external
         payable
-        returns (uint256 returnAmount, uint256 gasLeft) {}
+        returns (uint256 returnAmount, uint256 gasLeft);
 }

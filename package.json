@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.1",
-    "@truffle/hdwallet-provider": "^2.0.0",
+    "@truffle/hdwallet-provider": "^1.7.0",
+    "dotenv": "^16.0.1",
     "git-init": "^1.0.0",
-    "truffle-hdwallet-provider": "^1.0.17"
+    "truffle-hdwallet-provider": "^1.0.6"
   },
   "main": "truffle-config.js",
   "directories": {
